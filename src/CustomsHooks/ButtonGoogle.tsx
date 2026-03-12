@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { typeActionQuery } from "../Auth/Auth";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSesionContex } from "../Context/AuthContex";
 import { turismoAPiFecth } from "../apis/turismo.api";
 
@@ -28,7 +28,7 @@ export default function ButtonGoogle({ accionquery, setNotification }: props) {
       if (window.google && buttonRef.current) {
         window.google.accounts.id.initialize({
           client_id:
-            "492388293091-clirrcpj162pl46g9ao53hft4uoa2qh5.apps.googleusercontent.com",
+            "133667901696-9ild5j9lv59i1r07t2pdglsh1em56s8m.apps.googleusercontent.com",
           callback: async (response: any) => {
             try {
               const res = await fetch(
@@ -38,7 +38,7 @@ export default function ButtonGoogle({ accionquery, setNotification }: props) {
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ credential: response.credential }),
                   credentials: "include",
-                }
+                },
               );
 
               const data = await res.json();
