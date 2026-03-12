@@ -8,10 +8,10 @@ interface propLugar {
 
 export default function LugarPopup({ lugar }: propLugar) {
   const navigate = useNavigate();
-  const { nombre, img } = lugar;
+  const { id, img, nombre } = lugar;
 
   function irDetalles() {
-    navigate(`/Detallelugar/${nombre}`, { state: { lugar } });
+    navigate(`/Detallelugar/${id}`);
   }
   return (
     <Popup className="w-[240px] h-[140px] m-h-[140px]">

@@ -23,15 +23,15 @@ export default function ConexionLocal({ idlugar }: props) {
     }
   }, [vistaGuias, vistRef.current?.scrollHeight]);
 
-  console.log(vistRef.current?.scrollHeight);
-
   return (
     <div className="relative overflow-hidden">
       <div
         id="vistaRef"
         ref={vistRef}
         className={`w-[200%] ${
-          vistaGuias ? "max-h-166 tablet:max-h-200 desktop:max-h-180" : "max-h-380"
+          vistaGuias
+            ? "max-h-166 tablet:max-h-200 desktop:max-h-180"
+            : "max-h-380"
         } p-4 pt-4 pb-4 gap-8 flex bg-[#f2f3ee] tablet:gap-48 tablet:pr-24 tablet:pl-24 desktop:pr-34 desktop:pl-34 desktop:gap-68 transition-all duration-500 ease-in`}
       >
         <Localidades idlugar={idlugar} setVistaGuias={setVistaGuias} />

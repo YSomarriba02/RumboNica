@@ -39,9 +39,10 @@ export default function GuiasLocales({ idlugar, setVistaGuias }: props) {
         {guias.length == 0 ? (
           <h1>No hay guias</h1>
         ) : (
-          guias.map(({ nombre, apodo, especialidad, contacto }) => {
+          guias.map(({ nombre, apodo, especialidad, contacto, id_guia }) => {
             return (
               <TarjetaGuia
+                key={id_guia}
                 nombre={nombre}
                 apodo={apodo}
                 especialidad={especialidad}

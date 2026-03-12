@@ -1,28 +1,27 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import Perfil from "../../../../assets/icons/perfil.png";
-import { lugarContext } from "../../Context/LugarContext";
 import useEnviarComentario from "../hooks/useEnviarComentario";
 import { useSesionContex } from "../../../../Context/AuthContex";
 
 import { type iComentarioPublicacion } from "../interfaces/Comentarios";
-import { data } from "react-router-dom";
 
 interface prop {
   setComentariosPublicados: React.Dispatch<
     React.SetStateAction<iComentarioPublicacion[]>
   >;
+
+  idLugar: number;
 }
 
-export default function AgregarComentario({ setComentariosPublicados }: prop) {
+export default function AgregarComentario({
+  setComentariosPublicados,
+  idLugar,
+}: prop) {
   const [comentario, setComentario] = useState<string>("");
   const refTextArea = useRef<HTMLTextAreaElement | null>(null);
 
   const [puntuacion, setPuntuacion] = useState<number>(0);
   const estrellasArr = [1, 2, 3, 4, 5];
-
-  const [idLugar, setIdLugar] = useState<number>(
-    useContext(lugarContext) as number
-  );
 
   const { enviarComentario } = useEnviarComentario();
 

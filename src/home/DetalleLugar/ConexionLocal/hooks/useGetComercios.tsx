@@ -13,7 +13,7 @@ export default function useGetComercios({ idlugar }: prop) {
     async function getComercios() {
       try {
         const fetching = await fetch(
-          `${turismoAPiFecth}comercios/getcomercios/${idlugar}`
+          `${turismoAPiFecth}comercios/getcomercios/${idlugar}`,
         );
 
         if (!fetching.ok) throw new Error("Error al obetener data");
@@ -21,7 +21,6 @@ export default function useGetComercios({ idlugar }: prop) {
         const arrdata = await fetching.json();
 
         setComercios(arrdata.data);
-        console.log(arrdata.data);
       } catch (error) {
         setComercios([]);
       }

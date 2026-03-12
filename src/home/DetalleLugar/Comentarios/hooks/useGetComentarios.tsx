@@ -18,7 +18,7 @@ export default function useGetComentarios({ id_lugar }: prop) {
           `${turismoAPiFecth}comentarios/getcomentarios/${id_lugar}`,
           {
             credentials: "include",
-          }
+          },
         );
         if (!fetching.ok) throw new Error("Error al obtener comentarios");
         const data = await fetching.json();
@@ -27,7 +27,6 @@ export default function useGetComentarios({ id_lugar }: prop) {
         console.error(error);
       }
     }
-    console.log("se hace el fecth de getComentarios");
     getComentariosPublicados();
   }, []);
 

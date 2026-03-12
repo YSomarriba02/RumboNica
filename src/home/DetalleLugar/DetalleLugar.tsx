@@ -1,20 +1,34 @@
-import { useLocation, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Slider from "../../Components/Slider";
 import useImagenesLugar from "./hooks/useImagenesLugar";
 
-import { lugarContext } from "./Context/LugarContext";
 import ConexionLocal from "./ConexionLocal/ConexionLocal";
 import Comentarios from "./Comentarios/Comentarios";
+import { useLugaresContext } from "../../Context/LugaresContext";
+import Spinner from "../../Components/Spinner";
 
 export default function DetalleLugar() {
-  const location = useLocation();
-  const { lugar } = location.state;
-  const imagenesLugar = useImagenesLugar(lugar.id) as string[];
-  console.log(lugar);
+  console.log("se monto DetalleLugar");
+  const lugares = useLugaresContext();
+
+  const params = useParams();
+  const { lugar: id } = params;
+
+  console.log(`El id del lugar es ${id}`);
+  const lugar = lugares.find((l) => l.id == Number(id));
+  const imagenesLugar = useImagenesLugar(Number(id)) as string[];
+
+  if (!lugar) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
-    <lugarContext.Provider value={lugar.id}>
-      <div className="p-4 min-h-dvh flex flex-col gap-8 tablet:p-10">
+    <>
+      <div className="p-4 min-h-dvh flex flex-col items-center gap-8 tablet:p-10">
         <Slider
           titulo={lugar.nombre}
           imgDefault={lugar.img}
@@ -27,28 +41,10 @@ export default function DetalleLugar() {
               {lugar.descripcion}
             </p>
           </div>
-          {/* <div className="card group">
-            <div className="card-divpath"></div>
-            <div className="flex flex-col gap-[30px] relative z-10 font-nunito text-[18px]">
-              <p className="text-2xl font-semibold group-hover:transform-[translateX(130%)] w-[30%] transition-all duration-500 ease-initial">
-                Aves
-              </p>
-              <img
-                className="relative left-0 group-hover:transform-[translateX(180%)] w-[20%] transition-all duration-500 ease-initial"
-                src={ave}
-                alt=""
-              />
-              <p>{lugar.aves}</p>
-            </div>
-          </div> */}
-          {/* <div className="card">
-            <div className="card-divpath"></div>
-            <p>{lugar.descripcion_detalle}</p>
-          </div> */}
         </div>
-        <ConexionLocal idlugar={lugar.id} />
-        <Comentarios />
+        <ConexionLocal idlugar={Number(id)} />
+        <Comentarios idLugar={Number(id)} />
       </div>
-    </lugarContext.Provider>
+    </>
   );
 }

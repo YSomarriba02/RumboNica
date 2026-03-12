@@ -13,9 +13,6 @@ export const HeaderHome = () => {
   obtenerAve();
   const { sesion } = useSesionContex();
   const picture = sesion?.picture ?? perfil;
-  {
-    console.log("HeaderHome render, sesion:", sesion);
-  }
 
   return (
     <header className="relative z-50 w-full flex justify-between gap-4  bg-black text-white p-3 ">
