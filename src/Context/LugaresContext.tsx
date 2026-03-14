@@ -1,14 +1,7 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type JSX,
-  type ReactNode,
-} from "react";
+import fetcLugares from "../apis/fetchLugares";
+import { createContext, useContext, type ReactNode } from "react";
 import { type Lugar } from "../Explora/interfaces/Lugar";
-
-import { turismoAPiFecth } from "../apis/turismo.api";
+import { useQuery } from "@tanstack/react-query";
 
 const LugarContext = createContext<Lugar[]>([]);
 
@@ -17,22 +10,26 @@ interface props {
 }
 
 export function LugaresProvider({ children }: props) {
-  const [lugares, setLugares] = useState<Lugar[]>([]);
-  useEffect(() => {
-    async function getLugares() {
-      try {
-        const fetching = await fetch(`${turismoAPiFecth}lugares/getlugares`);
+  const {
+    data: lugares,
+    error,
+    isPending,
+  } = useQuery({
+    queryKey: ["lugares"],
+    queryFn: fetcLugares,
+    refetchOnWindowFocus: true,
+  });
 
-        if (!fetching.ok) throw new Error("Error al obtener lugares");
+  if (isPending) {
+    console.log("Se estan cargando");
+    return <LugarContext.Provider value={[]} />;
+  }
+  if (error) {
+    console.log("Error al cargarlos");
+    return <LugarContext.Provider value={[]} />;
+  }
 
-        const data = await fetching.json();
-        setLugares(data);
-      } catch (error) {}
-    }
-
-    getLugares();
-  }, []);
-
+  console.log("Se cargaron");
   return (
     <LugarContext.Provider value={lugares}>{children}</LugarContext.Provider>
   );

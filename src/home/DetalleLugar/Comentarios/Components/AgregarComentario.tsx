@@ -1,29 +1,31 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Perfil from "../../../../assets/icons/perfil.png";
-import useEnviarComentario from "../hooks/useEnviarComentario";
 import { useSesionContex } from "../../../../Context/AuthContex";
-
-import { type iComentarioPublicacion } from "../interfaces/Comentarios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import postComentario from "../../../../apis/postComentario";
 
 interface prop {
-  setComentariosPublicados: React.Dispatch<
-    React.SetStateAction<iComentarioPublicacion[]>
-  >;
-
   idLugar: number;
 }
 
-export default function AgregarComentario({
-  setComentariosPublicados,
-  idLugar,
-}: prop) {
+export default function AgregarComentario({ idLugar }: prop) {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: postComentario,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`comentarios_lugar${idLugar}`],
+      });
+    },
+  });
+
   const [comentario, setComentario] = useState<string>("");
   const refTextArea = useRef<HTMLTextAreaElement | null>(null);
 
   const [puntuacion, setPuntuacion] = useState<number>(0);
   const estrellasArr = [1, 2, 3, 4, 5];
 
-  const { enviarComentario } = useEnviarComentario();
+  // const { enviarComentario } = useEnviarComentario();
 
   const session = useSesionContex();
 
@@ -52,14 +54,14 @@ export default function AgregarComentario({
   async function Comentar() {
     if (!refTextArea.current) return;
     if (refTextArea.current.value == "") return;
-    const res: iComentarioPublicacion = await enviarComentario({
+    const res = {
       id_lugar: idLugar,
       contenido: refTextArea.current.value,
       puntuacion,
-    });
+    };
     console.log(res);
     console.log("nuevo comentario en el set");
-    setComentariosPublicados((prev) => [res, ...(prev || [])]);
+    mutation.mutate(res);
 
     setPuntuacion(0);
     setComentario("");

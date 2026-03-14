@@ -1,7 +1,6 @@
 import Comentario from "./Components/Comentario";
 import AgregarComentario from "./Components/AgregarComentario";
 import useGetComentarios from "./hooks/useGetComentarios";
-import { useContext } from "react";
 import { useSesionContex } from "../../../Context/AuthContex";
 
 interface props {
@@ -10,21 +9,14 @@ interface props {
 
 export default function Comentarios({ idLugar }: props) {
   const { sesion } = useSesionContex();
-  const { comentariosPublicados, setComentariosPublicados } = useGetComentarios(
-    { id_lugar: idLugar },
-  );
+  const { comentariosPublicados } = useGetComentarios({ id_lugar: idLugar });
 
   return (
     <div
       id="Box_Comentarios"
       className="w-full p-3 flex flex-col justify-center gap-4 items-center [box-shadow:1px_2px_3px_1px_black] rounded-[12px] tablet:p-6 tablet:w-[80%] desktop:w-[60%]"
     >
-      {sesion ? (
-        <AgregarComentario
-          setComentariosPublicados={setComentariosPublicados}
-          idLugar={idLugar}
-        />
-      ) : null}
+      {sesion ? <AgregarComentario idLugar={idLugar} /> : null}
       <div id="Comentarios" className="w-full h-[80%] flex flex-col gap-6">
         {comentariosPublicados.length == 0 ? (
           <h1 className="">No hay Comentarios</h1>
@@ -43,7 +35,7 @@ export default function Comentarios({ idLugar }: props) {
                 contenido={comentario.contenido}
                 esComentarioUsuario={esComentariousuario}
                 id_comentario={comentario.id_comentario}
-                setComentariosPublicados={setComentariosPublicados}
+                id_lugar={idLugar}
               />
             );
           })

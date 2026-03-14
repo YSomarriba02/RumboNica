@@ -14,7 +14,6 @@ export default function DetalleLugar() {
   const params = useParams();
   const { lugar: id } = params;
 
-  console.log(`El id del lugar es ${id}`);
   const lugar = lugares.find((l) => l.id == Number(id));
   const imagenesLugar = useImagenesLugar(Number(id)) as string[];
 

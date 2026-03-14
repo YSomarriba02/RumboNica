@@ -1,8 +1,6 @@
 import { useRef, useState } from "react";
 import Perfil from "../../../../assets/icons/perfil.png";
-import useEnviarComentarioEditado from "../hooks/useEnviarComentarioEditado";
-import useEliminarComentario from "../hooks/useEliminarComentario";
-import { type iComentarioPublicacion } from "../interfaces/Comentarios";
+import useComentariosMutation from "../hooks/useComentariosMutation";
 
 interface prop {
   picture: string;
@@ -12,9 +10,8 @@ interface prop {
   contenido: string;
   esComentarioUsuario?: boolean;
   id_comentario: number;
-  setComentariosPublicados: React.Dispatch<
-    React.SetStateAction<iComentarioPublicacion[]>
-  >;
+
+  id_lugar: number;
 }
 
 export default function Comentario({
@@ -25,12 +22,12 @@ export default function Comentario({
   contenido,
   esComentarioUsuario = false,
   id_comentario,
-  setComentariosPublicados,
+
+  id_lugar,
 }: prop) {
   const divEditable = useRef<HTMLDivElement | null>(null);
   const [editarEstado, setEditarEstado] = useState<boolean>(false);
-  const { enviarComentario } = useEnviarComentarioEditado();
-  const deleteComentario = useEliminarComentario();
+  const { editar, eliminar } = useComentariosMutation({ id_lugar });
 
   if (!picture) {
     picture = Perfil;
@@ -81,29 +78,12 @@ export default function Comentario({
     if (!contenidoNuevo) return;
     if (contenido === contenidoNuevo) return;
 
-    const res = await enviarComentario(id_comentario, contenidoNuevo);
-
+    const res = await editar({ id_comentario, contenidoNuevo });
     editarComentarioDesactivado();
-
-    //SI el comentario se actualiza o no sinceramente podria poner
-    //una notificacion pero por ahora se ve mejor asi
-    // if (!res) {
-    //   alert("Comentario no actualizado");
-    // }
-    // alert("comentario actualizado");
   }
 
   async function eliminarComentario() {
-    const res = await deleteComentario(id_comentario);
-    if (!res) {
-      return;
-    }
-    setComentariosPublicados((prev) => {
-      const comentariosPublicadosActualizado = prev.filter(
-        (comentario) => comentario.id_comentario !== id_comentario
-      );
-      return comentariosPublicadosActualizado;
-    });
+    await eliminar({ id_comentario });
   }
 
   const estrellasArr = [1, 2, 3, 4, 5];

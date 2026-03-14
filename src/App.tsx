@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AppRouter from "./Router/AppRouter";
 import "leaflet/dist/leaflet.css";
 import { SesionProvider } from "./Context/AuthContex";
@@ -7,6 +8,7 @@ import Intro from "./home/Intro/Intro";
 import { useEffect, useState } from "react";
 
 export const App = () => {
+  const queryClient = new QueryClient();
   const [state, setState] = useState(true);
   const tiempo = 2300;
   useEffect(() => {
@@ -24,11 +26,13 @@ export const App = () => {
   }
   return (
     <>
-      <SesionProvider>
-        <LugaresProvider>
-          <AppRouter />
-        </LugaresProvider>
-      </SesionProvider>
+      <QueryClientProvider client={queryClient}>
+        <SesionProvider>
+          <LugaresProvider>
+            <AppRouter />
+          </LugaresProvider>
+        </SesionProvider>
+      </QueryClientProvider>
     </>
   );
 };
