@@ -1,31 +1,19 @@
 import { useRef, useState } from "react";
 import Perfil from "../../../../assets/icons/perfil.png";
 import { useSesionContex } from "../../../../Context/AuthContex";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import postComentario from "../../../../apis/postComentario";
+import useComentariosMutation from "../hooks/useComentariosMutation";
 
 interface prop {
   idLugar: number;
 }
 
 export default function AgregarComentario({ idLugar }: prop) {
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: postComentario,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`comentarios_lugar${idLugar}`],
-      });
-    },
-  });
-
+  const { agregar } = useComentariosMutation({ id_lugar: idLugar });
   const [comentario, setComentario] = useState<string>("");
   const refTextArea = useRef<HTMLTextAreaElement | null>(null);
 
   const [puntuacion, setPuntuacion] = useState<number>(0);
   const estrellasArr = [1, 2, 3, 4, 5];
-
-  // const { enviarComentario } = useEnviarComentario();
 
   const session = useSesionContex();
 
@@ -54,15 +42,13 @@ export default function AgregarComentario({ idLugar }: prop) {
   async function Comentar() {
     if (!refTextArea.current) return;
     if (refTextArea.current.value == "") return;
-    const res = {
+    const nuevoComentario = {
       id_lugar: idLugar,
       contenido: refTextArea.current.value,
       puntuacion,
     };
-    console.log(res);
-    console.log("nuevo comentario en el set");
-    mutation.mutate(res);
 
+    agregar(nuevoComentario);
     setPuntuacion(0);
     setComentario("");
     refTextArea.current.blur();

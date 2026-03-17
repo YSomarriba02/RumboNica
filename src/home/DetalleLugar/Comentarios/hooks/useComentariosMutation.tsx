@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import patchComentario from "../../../../apis/patchComentario";
 import type { iComentarioPublicacion } from "../interfaces/Comentarios";
 import deleteComentario from "../../../../apis/deleteComentario";
+import postComentario from "../../../../apis/postComentario";
+import { useSesionContex } from "../../../../Context/AuthContex";
 
 export default function useComentariosMutation({
   id_lugar,
@@ -9,6 +11,8 @@ export default function useComentariosMutation({
   id_lugar: number;
 }) {
   const queryClient = useQueryClient();
+  const sesion = useSesionContex();
+  const usuarioSession = sesion.sesion!;
 
   const editar = useMutation({
     mutationFn: patchComentario,
@@ -67,13 +71,60 @@ export default function useComentariosMutation({
 
       console.log(`La restauracion de previus es: ${previus}`);
     },
-
-    // onSettled: () => {
-    //   queryClient.invalidateQueries({
-    //     queryKey: [`comentarios_lugar${id_lugar}`],
-    //   });
-    // },
   });
 
-  return { editar: editar.mutateAsync, eliminar: eliminar.mutate };
+  const agregar = useMutation({
+    mutationFn: postComentario,
+
+    //Realizo una actualizacion optimista a la lista
+    //de comentarios, dado que cada comentario necesita un id para
+    //existir asigno temporalmente un id con el resto del comentario de forma inmediata,
+    //cuando el server responde con el comentario real, seteo regresando
+    // al valor real + comentarioNuevo, en caso de error roolback al estado original
+    onMutate: (variables) => {
+      queryClient.cancelQueries({ queryKey: [`comentarios_lugar${id_lugar}`] });
+      const previus: iComentarioPublicacion[] =
+        queryClient.getQueryData([`comentarios_lugar${id_lugar}`]) || [];
+      queryClient.setQueryData(
+        [`comentarios_lugar${id_lugar}`],
+        (comentarios: iComentarioPublicacion[]) => {
+          const id_usuario = usuarioSession.id_usuario;
+          const imagenurl = usuarioSession.picture;
+          const nombre = usuarioSession.name;
+          return [
+            {
+              ...variables,
+              fecha_creacion: String(new Date()),
+              id_comentario: -1,
+              usuarios: {
+                id_usuario,
+                imagenurl,
+                nombre,
+              },
+            },
+            ...comentarios,
+          ];
+        },
+      );
+      return { previus };
+    },
+    onError: (_error, _variables, onMutateResult) => {
+      queryClient.setQueryData(
+        [`comentarios_lugar${id_lugar}`],
+        onMutateResult?.previus,
+      );
+    },
+    onSuccess: (data, _variables, onMutateResult) => {
+      queryClient.setQueryData([`comentarios_lugar${id_lugar}`], () => {
+        const previus = onMutateResult.previus;
+        return [data, ...onMutateResult.previus];
+      });
+    },
+  });
+
+  return {
+    editar: editar.mutateAsync,
+    eliminar: eliminar.mutateAsync,
+    agregar: agregar.mutateAsync,
+  };
 }

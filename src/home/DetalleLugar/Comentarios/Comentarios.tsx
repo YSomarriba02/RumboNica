@@ -22,20 +22,22 @@ export default function Comentarios({ idLugar }: props) {
           <h1 className="">No hay Comentarios</h1>
         ) : (
           comentariosPublicados.map((comentario) => {
-            if (!comentario.usuarios) return;
-            const esComentariousuario =
-              sesion?.id_usuario === comentario.usuarios.id_usuario;
+            console.log(comentario);
+            // if (!comentario.usuarios) return;
+
             return (
               <Comentario
                 key={comentario.id_comentario}
-                picture={comentario.usuarios.imagenurl}
-                usuarioNombre={comentario.usuarios.nombre}
+                id_lugar={idLugar}
+                id_comentario={comentario.id_comentario}
                 fecha={comentario.fecha_creacion}
                 puntuacion={comentario.puntuacion}
                 contenido={comentario.contenido}
-                esComentarioUsuario={esComentariousuario}
-                id_comentario={comentario.id_comentario}
-                id_lugar={idLugar}
+                usuarioNombre={comentario.usuarios.nombre}
+                picture={comentario.usuarios.imagenurl}
+                esComentarioUsuario={
+                  sesion?.id_usuario === comentario.usuarios.id_usuario
+                }
               />
             );
           })
