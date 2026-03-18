@@ -8,8 +8,9 @@ interface Props {
 }
 
 export const AvesCard = ({ ave }: Props) => {
+  console.log(ave);
   return (
-    <div className=" bg-lightGreen  flex flex-col gap-5 rounded-2xl p-2 shadow-lg hover:scale-105 transition-transform duration-400 ease-in-out ">
+    <div className=" bg-lightGreen animacion-reveal flex flex-col gap-5 rounded-2xl p-2 shadow-lg hover:scale-105 transition-transform duration-400 ease-in-out ">
       <div className="flex justify-center items-center w-full h-[250px] ">
         <img
           className="w-full h-full object-cover object-top-left rounded-2xl  "
@@ -24,12 +25,13 @@ export const AvesCard = ({ ave }: Props) => {
       <div className="flex justify-between items-center gap-3 w-full">
         <p className="  px-2 py-3 rounded-2xl bg-white font-nunito font-bold w-[80%] ">
           {" "}
-          Estado: <EstadoAve estado={ave.estados_conservacion.nombre}></EstadoAve>
+          Estado:{" "}
+          <EstadoAve estado={ave.estados_conservacion.nombre}></EstadoAve>
         </p>
 
         <Link
-          to={"/Aves-Detalles"}
-          state={ave}
+          to={`/Aves-Detalles/${ave.ave_id}`}
+          // state={ave}
           className=" px-2 py-3  rounded-2xl bg-black font-nunito font-bold w-[20%] desktop:w-[30%] text-center text-white hover:bg-white hover:text-black transition-colors"
         >
           +INFO

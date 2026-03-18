@@ -3,6 +3,7 @@ import { useAve } from "../hooks/useAve";
 import { AvesFiltro } from "./AvesFiltro";
 import { AvesGrid } from "./AvesGrid";
 import { Carrucel } from "../../Components/Carrucel";
+import { useQueryClient } from "@tanstack/react-query";
 
 const preloadCard = 10;
 
@@ -16,13 +17,20 @@ const filtros = [
 ];
 
 export const AviturismoPage = () => {
-  const { aves, obtenerAves, filtrarAvesPorZona, isLoading } = useAve();
+  const { isLoading, aves, obtenerAveZona } = useAve();
   const [zona, setZona] = useState<number>(0);
   const [cardsToShow, setCardsToShow] = useState<number>(preloadCard);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    obtenerAves();
-  }, []);
+    aves.forEach((ave) => {
+      const existing = queryClient.getQueryData([`ave`, ave.ave_id]);
+
+      if (!existing) {
+        queryClient.setQueryData([`ave`, ave.ave_id], ave);
+      }
+    });
+  }, [aves]);
 
   useEffect(() => {
     setCardsToShow(preloadCard);
@@ -42,23 +50,25 @@ export const AviturismoPage = () => {
 
     setZona(zonaId);
 
-    if (zonaId === 0) {
-      obtenerAves();
-    } else {
-      filtrarAvesPorZona(zonaId);
+    if (zonaId === 0) return;
+    else {
+      obtenerAveZona(zonaId);
     }
   };
 
   // Determina si el botón "Ver Más" debe ser visible
-  const showLoadMoreButton = visibleAves.length > 0 && cardsToShow < aves.length;
+  const showLoadMoreButton =
+    visibleAves.length > 0 && cardsToShow < aves.length;
 
   return (
     <div className="flex flex-col justify-center items-center bg-regularGreen">
       <div className="w-full flex flex-col gap-6 desktop:flex-row  justify-between items-center py-4 px-6 ">
         <p className="font-nunito font-bold w-full text-md  desktop:w-[50%] desktop:text-3xl text-justify">
-          ¿Estás listo para la aventura? El aviturismo es más que una actividad, es una inmersión profunda en la
-          naturaleza salvaje. En <span className="text-lightGreen">Rumbo Nica</span>, te llevamos a los mejores hotspots
-          para observar especies raras y migratorias. Prepara tus binoculares, la biodiversidad te espera.
+          ¿Estás listo para la aventura? El aviturismo es más que una actividad,
+          es una inmersión profunda en la naturaleza salvaje. En{" "}
+          <span className="text-lightGreen">Rumbo Nica</span>, te llevamos a los
+          mejores hotspots para observar especies raras y migratorias. Prepara
+          tus binoculares, la biodiversidad te espera.
         </p>
         <Carrucel></Carrucel>
       </div>
@@ -69,11 +79,16 @@ export const AviturismoPage = () => {
         </h2>
       </div>
 
-      <AvesFiltro filtros={filtros} onFiltroClick={handleFiltroClick}></AvesFiltro>
+      {/* <AvesFiltro
+        filtros={filtros}
+        onFiltroClick={handleFiltroClick}
+      ></AvesFiltro> */}
 
       {isLoading ? (
         <div className="text-center py-10">
-          <span className="animate-pulse text-4xl text-darkGreen">Cargando aves...</span>
+          <span className="animate-pulse text-4xl text-darkGreen">
+            Cargando aves...
+          </span>
         </div>
       ) : (
         <>
@@ -95,7 +110,9 @@ export const AviturismoPage = () => {
           )}
 
           {visibleAves.length === 0 && !isLoading && (
-            <p className="my-8 text-xl text-gray-600">No se encontraron aves para esta zona.</p>
+            <p className="my-8 text-xl text-gray-600">
+              No se encontraron aves para esta zona.
+            </p>
           )}
         </>
       )}

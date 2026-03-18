@@ -46,7 +46,7 @@ html {
   @apply [box-shadow:2px_2px_8px_2px_#292929] transform-[rotate(3deg)];
 }
 
-.card:hover > div {
+.card:hover>div {
   @apply [clip-path:circle(150%_at_0%_100%)];
 }
 
@@ -77,6 +77,7 @@ html {
   border-radius: 14px;
   overflow: hidden;
 }
+
 @media (min-width: 768px) {
   #content-imagenes div:first-child {
     width: 12%;
@@ -95,15 +96,18 @@ html {
 .animacion-slider-entrada {
   animation: animacion-slider-entrada 1s ease forwards;
 }
+
 /* ------------------------------------------ */
 
 /* Elinar estilos por defecto del summay */
 summary {
   list-style: none;
 }
+
 summary::marker {
   content: "";
 }
+
 /* ----------------------------------------- */
 
 .linea-animada {
@@ -120,9 +124,11 @@ summary::marker {
   0% {
     left: -100%;
   }
+
   50% {
     left: 100%;
   }
+
   100% {
     left: 100%;
   }
@@ -151,6 +157,7 @@ details[open] summary {
     transform: translateY(90vh);
     scale: 90%;
   }
+
   to {
     transform: translateY(0);
     filter: blur(0);
@@ -168,11 +175,13 @@ details[open] summary {
     transform: translate(-50%, -100vh) scale(0.1);
     opacity: 0;
   }
+
   50%,
   90% {
     transform: translate(-50%, -50%) scale(2);
     opacity: 1;
   }
+
   100% {
     transform: translate(-50%, -50%) scale(1);
 
@@ -189,6 +198,7 @@ details[open] summary {
     filter: blur(10px);
     transform: translateY(-100vh);
   }
+
   to {
     filter: blur(0);
     transform: translateY(0%);
@@ -198,14 +208,17 @@ details[open] summary {
 #notificacion {
   animation: animacionNotificacion 5s ease-in-out forwards;
 }
+
 @keyframes animacionNotificacion {
   0% {
     transform: translate(-50%, -100vh);
   }
+
   20%,
   80% {
     transform: translate(-50%, 0%);
   }
+
   100% {
     transform: translate(-50%, -100vh);
   }
@@ -219,6 +232,7 @@ details[open] summary {
   from {
     transform: translateX(0%);
   }
+
   to {
     transform: translateX(-50%);
   }
@@ -232,6 +246,7 @@ details[open] summary {
   from {
     transform: translateX(-50%);
   }
+
   to {
     transform: translateX(0%);
   }
@@ -267,9 +282,10 @@ details[open] summary {
 
 @keyframes appear {
   from {
-    scale: 0.4;
-    opacity: 0.5;
+    scale: 0.8;
+    opacity: 0.8;
   }
+
   to {
     opacity: 1;
     scale: 1;
@@ -279,5 +295,6 @@ details[open] summary {
 .animacion-reveal {
   animation: appear linear;
   animation-timeline: view();
-  animation-range: entry 0%;
+  animation-range: entry 25% cover 50%;
+  animation-fill-mode: both;
 }

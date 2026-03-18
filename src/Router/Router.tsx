@@ -35,7 +35,7 @@ export default function Router() {
             <Route path="*" element={<Navigate to={"/404"} />} />
           </Route>
         </Route>
-        <Route path="/Aves-Detalles" element={<AvesDetalles />} />
+        <Route path="/Aves-Detalles/:aveid" element={<AvesDetalles />} />
         <Route path="/Detallelugar/:lugar" element={<DetalleLugar />} />
         <Route index element={<Navigate to="/Inicio"></Navigate>}></Route>{" "}
         <Route path="/Perfil" element={<Perfil />} />

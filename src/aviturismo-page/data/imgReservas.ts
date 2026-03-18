@@ -1,28 +1,28 @@
 export const listImgReservas: imgReservas[] = [
   {
     id: 1,
-    urlImg: "https://kozarxgvjnsdtpmauqik.supabase.co/storage/v1/object/public/aves-img/reservas-img/chocoyero.webp",
+    urlImg: "https://vsyvflmvfogjynkkqlup.supabase.co/storage/v1/object/public/aves-img/reservas-img/chocoyero.webp",
   },
   {
     id: 2,
-    urlImg: "https://kozarxgvjnsdtpmauqik.supabase.co/storage/v1/object/public/aves-img/reservas-img/guatuzos.webp",
+    urlImg: "https://vsyvflmvfogjynkkqlup.supabase.co/storage/v1/object/public/aves-img/reservas-img/guatuzos.webp",
   },
   {
     id: 3,
-    urlImg: "https://kozarxgvjnsdtpmauqik.supabase.co/storage/v1/object/public/aves-img/reservas-img/Laguna-apoyo.webp",
+    urlImg: "https://vsyvflmvfogjynkkqlup.supabase.co/storage/v1/object/public/aves-img/reservas-img/Laguna-apoyo.webp",
   },
   {
     id: 4,
-    urlImg: "https://kozarxgvjnsdtpmauqik.supabase.co/storage/v1/object/public/aves-img/reservas-img/selva-negra.webp",
+    urlImg: "https://vsyvflmvfogjynkkqlup.supabase.co/storage/v1/object/public/aves-img/reservas-img/selva-negra.webp",
   },
   {
     id: 5,
-    urlImg: "https://kozarxgvjnsdtpmauqik.supabase.co/storage/v1/object/public/aves-img/reservas-img/chacocente.webp",
+    urlImg: "https://vsyvflmvfogjynkkqlup.supabase.co/storage/v1/object/public/aves-img/reservas-img/chacocente.webp",
   },
   {
     id: 6,
     urlImg:
-      "https://kozarxgvjnsdtpmauqik.supabase.co/storage/v1/object/public/aves-img/reservas-img/Reserva-natural-el-jaguar.webp",
+      "https://vsyvflmvfogjynkkqlup.supabase.co/storage/v1/object/public/aves-img/reservas-img/Reserva-natural-el-jaguar.webp",
   },
 ];
 

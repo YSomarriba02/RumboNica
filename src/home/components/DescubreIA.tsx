@@ -45,19 +45,31 @@ export default function DescubreIA() {
     <div className="w-full bg-[#e2e2e2] flex flex-col gap-2 p-4 rounded-2xl [box-shadow:1px_1px_2px_1px_black] desktop:flex-row desktop:gap-4 animacion-reveal">
       <div className="flex flex-col gap-2 w-full desktop:w-[60%]">
         <div>
-          <h1 className="p-2 font-nunito text-[18px] font-semibold tablet:text-2xl">Descubre con IA</h1>
+          <h1 className="p-2 font-nunito text-[18px] font-semibold tablet:text-2xl">
+            Descubre con IA
+          </h1>
 
           <div className="p-1 flex gap-1 w-full h-10 bg-white rounded-[6px]">
-            <input type="text" className="w-full text-[12px] h-full" ref={inputRef} />
+            <input
+              type="text"
+              className="w-full text-[12px] h-full"
+              ref={inputRef}
+            />
 
-            <button className="w-[10%] flex justify-end" onClick={responderPregunta}>
+            <button
+              className="w-[10%] flex justify-end"
+              //  onClick={responderPregunta}
+            >
               <figure className="flex items-center">
                 <img src={enviar} alt="" className="h-[70%]" />
               </figure>
             </button>
           </div>
         </div>
-        <div ref={repuestaRef} className="min-h-14 p-2 bg-white rounded-[6px] [border:solid_black_1px]">
+        <div
+          ref={repuestaRef}
+          className="min-h-14 p-2 bg-white rounded-[6px] [border:solid_black_1px]"
+        >
           {mostrarTarjeta
             ? "Te recomiendo Salto La Estanzuela, en Estelí: un lugar perfecto para hacer senderismo entre bosques y miradores, terminando con un chapuzón bajo su impresionante cascada de 40 metros. El acceso es fácil, ideal para un día de naturaleza, aventura y relax."
             : ""}

@@ -1,26 +1,43 @@
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import type { Ave } from "../interface/Ave";
 import { EstadoAve } from "./EstadoAve";
 import AvesMapa from "./AvesMapa";
 import { useAve } from "../hooks/useAve";
-import { useEffect } from "react";
 import { ReservasGrid } from "./ReservasGrid";
 import Slider from "../../Components/Slider";
+import { useQueryClient } from "@tanstack/react-query";
+import Spinner from "../../Components/Spinner";
 
 export const AvesDetalles = () => {
-  const location = useLocation();
-  const ave = location.state as Ave;
+  const { obtenerReservas, obtenerImagenes, aves, isLoading } = useAve();
+  const { aveid: paramave } = useParams();
+  const queryClient = useQueryClient();
 
-  const { reservas, obtenerReservas, listUrl, obtenerImgs } = useAve();
+  const aveid = Number(paramave);
+  let ave: Ave;
 
-  useEffect(() => {
-    obtenerReservas(ave.ave_id);
-  }, []);
+  const cache = queryClient.getQueryData([`ave`, aveid]);
 
-  useEffect(() => {
-    obtenerImgs(ave.ave_id);
-  }, []);
+  if (isLoading || !cache) {
+    console.warn("No hay cache");
+    aves.forEach((ave) => {
+      queryClient.setQueryData([`ave`, ave.ave_id], ave);
+    });
+    ave = aves.find((ave) => ave.ave_id == aveid)!;
+  } else {
+    ave = queryClient.getQueryData([`ave`, aveid])!;
+  }
 
+  const reservasQuery = obtenerReservas(aveid);
+  const imagenesQuery = obtenerImagenes(aveid);
+
+  if (reservasQuery.isLoading || imagenesQuery.isLoading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <Spinner />
+      </div>
+    );
+  }
   //Data Fake
 
   const conteoAvistamientos = {
@@ -45,7 +62,7 @@ export const AvesDetalles = () => {
 
   return (
     <div>
-      <Slider imgDefault={ave.url_img} imagenes={listUrl}></Slider>
+      <Slider imgDefault={ave.url_img} imagenes={imagenesQuery.data!}></Slider>
 
       <section className=" flex-col-reverse w-screen desktop:flex-row flex justify-around items-center p-2 bg-regularGreen  ">
         <div className="  w-full desktop:w-[65%]  flex flex-col gap-5 p-3 bg-linear-gradient  from-lightGray  to-darkGreen  ">
@@ -64,11 +81,15 @@ export const AvesDetalles = () => {
 
           <div className="flex flex-col-reverse desktop:flex-row justify-around items-center gap-6 p-3  bg-regularGreen rounded-2xl">
             <div className="w-full desktop:w-[25%] flex flex-col  p-3 bg-lightGreen rounded-2xl hover:scale-102 transition-transform ease-in-out duration-300">
-              <p className="text-xl text-white desktop:text-3xl">{ave.tamano}</p>
+              <p className="text-xl text-white desktop:text-3xl">
+                {ave.tamano}
+              </p>
               <p className="font-bold text-white">Tamaño</p>
             </div>
             <div className=" w-full desktop:w-[25%] flex flex-col gap-2  p-3 bg-lightGreen  rounded-2xl  hover:scale-102 transition-transform ease-in-out duration-300">
-              <p className=" text-xl text-white desktop:text-3xl">{ave.dieta}</p>
+              <p className=" text-xl text-white desktop:text-3xl">
+                {ave.dieta}
+              </p>
               <p className="font-bold text-white">Dieta</p>
             </div>
             <div className="w-full desktop:w-[50%] flex flex-col gap-3 px-2 py-4 bg-lightGreen rounded-2xl hover:scale-102 transition-transform ease-in-out duration-300">
@@ -103,7 +124,7 @@ export const AvesDetalles = () => {
         <h2 className="capitalize w-full text-center text-2xl text-lightGreen bg-regularGreen  p-3 font-nunito font-bold ">
           Lugares donde puedes encontrar a este especimen
         </h2>
-        <ReservasGrid reservasNaturales={reservas}></ReservasGrid>
+        <ReservasGrid reservasNaturales={reservasQuery.data!}></ReservasGrid>
       </section>
     </div>
   );

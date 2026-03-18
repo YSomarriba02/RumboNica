@@ -1,81 +1,58 @@
-import { useState } from "react";
-import type { Ave } from "../interface/Ave";
 import {
   obtenerAve,
   obtenerAvesPorZona,
   obtenerReservasPorAve,
   obtenerImgPorAve,
 } from "../service";
-import type { ReservaNatural } from "../interface/ReservaNatural";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+const CACHETIME = 15 * 60 * 10000;
 
 export const useAve = () => {
-  const [aves, setAves] = useState<Ave[]>([]);
-  const [reservas, setReservas] = useState<ReservaNatural[]>([]);
-  const [listUrl, setListUrl] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   //obtener todas las aves
-  const obtenerAves = async () => {
-    setIsLoading(true);
-    try {
-      const listAves = await obtenerAve();
-      setAves(listAves);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const avesQUery = useQuery({
+    queryFn: obtenerAve,
+    queryKey: [`aves`],
+    staleTime: CACHETIME,
+  });
 
   //obtener aves filtradas por zona
-  const filtrarAvesPorZona = async (zonaId: number) => {
-    setIsLoading(true);
-    try {
-      const listAves = await obtenerAvesPorZona(zonaId);
-      setAves(listAves);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  function obtenerAveZona(zonaId: number) {
+    const aves = useQuery({
+      queryFn: () => obtenerAvesPorZona(zonaId),
+      queryKey: [`aveszona`, zonaId],
+      staleTime: CACHETIME,
+    });
+    return aves;
+  }
 
-  const obtenerImgs = async (aveId: number) => {
-    setIsLoading(true);
-    try {
-      const urls = await obtenerImgPorAve(aveId);
-      setListUrl(urls);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  function obtenerImagenes(aveId: number) {
+    const imagenes = useQuery({
+      queryFn: () => obtenerImgPorAve(aveId),
+      queryKey: [`aveImagenes`, aveId],
+      staleTime: CACHETIME,
+    });
+    return imagenes;
+  }
 
   //obtener reservas  por ave
-  const obtenerReservas = async (aveId: number) => {
-    setIsLoading(true);
-    try {
-      const listReservas = await obtenerReservasPorAve(aveId);
-      setReservas(listReservas);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  function obtenerReservas(aveId: number) {
+    const reservas = useQuery({
+      queryFn: () => obtenerReservasPorAve(aveId),
+      queryKey: [`reservaAve`, aveId],
+      staleTime: CACHETIME,
+    });
+    return reservas;
+  }
 
   return {
     //propiedades
-    aves,
-    isLoading,
-    reservas,
-    listUrl,
-
-    //metodos
-    obtenerAves,
-    filtrarAvesPorZona,
+    isLoading: avesQUery.isLoading,
     obtenerReservas,
-    obtenerImgs,
+    obtenerImagenes,
+    obtenerAveZona,
+    aves: avesQUery.data || [],
   };
 };
