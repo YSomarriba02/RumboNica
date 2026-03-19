@@ -7,4 +7,4 @@ export const turismoApi = axios.create({
   baseURL: urlServer,
 });
 
-export const turismoAPiFecth = urlLocal;
+export const turismoAPiFecth = urlServer;
