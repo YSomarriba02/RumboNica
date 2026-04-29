@@ -19,7 +19,7 @@ export default function Home() {
         />
       </figure>
       <div className="w-full p-4 tablet:px-38 desktop:px-48">
-        <DescubreIA />
+        {/* <DescubreIA /> */}
       </div>
     </div>
   );
